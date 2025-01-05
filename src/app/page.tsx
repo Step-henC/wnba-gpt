@@ -12,8 +12,15 @@ import LoadingBubble from "./components/LoadingBubble"
 const Home = () => {
 
     const {append, isLoading, messages, input, handleInputChange, handleSubmit} = useChat()
-    const noMessages = false;
-
+    const noMessages = !messages || messages.length === 0;
+    const handlePrompt = (text: string) => {
+            const msg: Message = {
+                id: crypto.randomUUID(),
+                content: text,
+                role: 'user'
+            }
+            append(msg)
+    }
     return (
         <main>
             <Image src={wnbaLogo} width={"250"} alt="WNBA GPT Logo" />
@@ -26,13 +33,13 @@ const Home = () => {
                     most up to date answers. Subscribe for continous access.
                 </p>
                 <br />
-                <PromptSuggestions />
+                <PromptSuggestions onPromptClick={handlePrompt} />
                 </>
             
             ) : (
             <>
-            {/* map messages onto text bubbles */}
-            <LoadingBubble />
+            {messages.map((message, index) => <Bubble key={`message-${index}`} message={message} />)}
+            {isLoading && <LoadingBubble /> }
             </>)}
            
             </section>
