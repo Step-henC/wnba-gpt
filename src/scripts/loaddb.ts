@@ -36,7 +36,9 @@ const wnbaData = [
 'https://www.basketball-reference.com/wnba/draft/2023.html',
 'https://www.basketball-reference.com/wnba/draft/2022.html',
 'https://www.basketball-reference.com/wnba/allstar/WNBA_2024.html',
-'https://www.basketball-reference.com/wnba/allstar/WNBA_2023.html'
+'https://www.basketball-reference.com/wnba/allstar/WNBA_2023.html',
+'https://frontofficesports.com/the-25-highest-paid-wnba-players/',
+'https://herhoopstats.com/salary-cap-sheet/wnba/players/salary_2023/stats_2022/'
 ]
 
 // scrape
