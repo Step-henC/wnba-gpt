@@ -12,17 +12,18 @@ import { PuppeteerWebBaseLoader } from '@langchain/community/document_loaders/we
 type SimiliarityMetric = "dot_product" | "cosine" | "euclidean"
 
 
+    const ASTRA_DB_NAMESPACE: string = process.env.ASTRA_DB_NAMESPACE || ''
+    const ASTRA_DB_COLLECTION: string = process.env.ASTRA_DB_COLLECTION || ''
+    const ASTRA_DB_API_ENDPOINT:string = process.env.ASTRA_DB_API_ENDPOINT || ''
+    const ASTRA_DB_APP_TOKEN:string = process.env.ASTRA_DB_APP_TOKEN || ''
+    const OPENAI_API_KEY:string = process.env.OPENAI_API_KEY || ''
+
+
  // Nextjs Destructering objects is tricky per docs
  // I would have to manually name ea env var from process.env
  // as oppose to creating a type for typescript
  // so our strict typescript policy is false for the time being
-const {
-    ASTRA_DB_NAMESPACE, 
-    ASTRA_DB_COLLECTION,
-    ASTRA_DB_API_ENDPOINT,
-    ASTRA_DB_APP_TOKEN,
-    OPENAI_API_KEY
-}  = process.env
+
 
 const openai = new OpenAI({apiKey: OPENAI_API_KEY}); //GPT_4 last updated 2021 so scrape for new data
 
@@ -34,11 +35,13 @@ const wnbaData = [
 'https://www.basketball-reference.com/wnba/years/2023.html',
 'https://www.basketball-reference.com/wnba/draft/2024.html',
 'https://www.basketball-reference.com/wnba/draft/2023.html',
-'https://www.basketball-reference.com/wnba/draft/2022.html',
 'https://www.basketball-reference.com/wnba/allstar/WNBA_2024.html',
-'https://www.basketball-reference.com/wnba/allstar/WNBA_2023.html',
 'https://frontofficesports.com/the-25-highest-paid-wnba-players/',
-'https://herhoopstats.com/salary-cap-sheet/wnba/players/salary_2023/stats_2022/'
+'https://www.wnba.com/news/2024-kia-rookie-of-the-year',
+'https://fever.wnba.com/news/aliyah-boston-named-2023-wnba-rookie-of-the-year',
+'https://www.wnba.com/history-wnba-finals-mvp',
+'https://en.wikipedia.org/wiki/2024_WNBA_Finals',
+'https://www.wnba.com/draft/2024/board',
 ]
 
 // scrape
