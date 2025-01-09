@@ -3,14 +3,11 @@ import { embed, streamText } from "ai";
 import { DataAPIClient } from "@datastax/astra-db-ts";
 
 
-const {
-    ASTRA_DB_NAMESPACE, 
-    ASTRA_DB_COLLECTION,
-    ASTRA_DB_API_ENDPOINT,
-    ASTRA_DB_APP_TOKEN,
-    OPENAI_API_KEY
-}  = process.env
-
+const ASTRA_DB_NAMESPACE: string = process.env.ASTRA_DB_NAMESPACE || ''
+const ASTRA_DB_COLLECTION: string = process.env.ASTRA_DB_COLLECTION || ''
+const ASTRA_DB_API_ENDPOINT:string = process.env.ASTRA_DB_API_ENDPOINT || ''
+const ASTRA_DB_APP_TOKEN:string = process.env.ASTRA_DB_APP_TOKEN || ''
+const OPENAI_API_KEY:string = process.env.OPENAI_API_KEY || ''
 
 const openai = createOpenAI({
     apiKey: OPENAI_API_KEY
@@ -28,23 +25,16 @@ export async function POST(req: Request) {
             let docContext = ""
 
             //create an embedding from user query
-        //  const embedding =  await openaiclient.embeddings.create({
-        //         model: 'text-embedding-3-small',
-        //         input: latestMessage,
-        //         encoding_format: "float"
-        //     })
         const {embedding } = await embed({
             model: openai.embedding('text-embedding-3-small'),
             value: latestMessage,
 
         })
 
-     
-
             try {
                 // search db for embeddings of user query that are similar. limit first 10 res
                 const collection = await db.collection(ASTRA_DB_COLLECTION)
-                const result = collection.find(null, {
+                const result = collection.find({}, {
                     sort: {
                         $vector: embedding,
                     },
@@ -60,6 +50,7 @@ export async function POST(req: Request) {
             }
 
             const template = {
+                role: "system",
                 content: `You are an AI assistant who knows everything about the Women's National Basketball Association abbreviated as WNBA.
                 Use the below context argument to what you know about the WNBA. 
                 The context will provide you with most recent page data from Wikipedia, ESPN, official WNBA website and other sources.
@@ -68,16 +59,20 @@ export async function POST(req: Request) {
                 ------------------------
                 START CONTEXT
                 ${docContext}
-                END CONTEXT`
+                END CONTEXT
+                ------------------------`
             }
 
             const result = streamText({
-                  model: openai.completion('gpt-3.5-turbo-instruct'), //only model available at time, still stops at 2021 so we are adding new knowledge
+                  model: openai('gpt-4'), //stops at 2021 so we are adding new knowledge
                   system: template.content,
-                  prompt: latestMessage    
+                  prompt: latestMessage
+            
             })
 
             return result.toDataStreamResponse();
+
+          
     } catch (error) {
         console.log("ERROR ", error)
     }

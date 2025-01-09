@@ -1,5 +1,5 @@
-"use client"
 
+"use client"
 
 import Image from "next/image"
 import wnbaLogo from "./assets/wnbagptlogo.jpeg"
@@ -9,7 +9,7 @@ import Bubble from "./components/Bubble"
 import PromptSuggestions from "./components/PromptSuggestions"
 import LoadingBubble from "./components/LoadingBubble"
 
-const Home = () => {
+const Home =  () => {
 
     const {append, isLoading, messages, input, handleInputChange, handleSubmit} = useChat()
     const noMessages = !messages || messages.length === 0;
@@ -21,6 +21,7 @@ const Home = () => {
             }
             append(msg)
     }
+
     return (
         <main>
             <Image src={wnbaLogo} width={"250"} alt="WNBA GPT Logo" />
